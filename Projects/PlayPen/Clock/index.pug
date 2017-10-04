@@ -1,0 +1,49 @@
+.clockface
+  .hand.second.animate
+  .hand.minute.animate
+  .hand.hour.animate
+  -var n = 1
+  while n <= 12
+    .label(class='label-' + n)
+      .label_number= n++
+      
+.digital
+  .hours.division
+    .counter
+      .digits.animate.hours_tens
+        -var i = 0
+        while i <= 2
+          .digit= i++
+        .digit 0
+    .counter
+      .digits.animate.hours_units
+        -i = 0
+        while i <= 9
+          .digit= i++
+        .digit 0
+  .minutes.division
+    .counter
+      .digits.animate.minutes_tens
+        -i = 0
+        while i <= 5
+          .digit= i++
+        .digit 0
+    .counter
+      .digits.animate.minutes_units
+        -i = 0
+        while i <= 9
+          .digit= i++
+        .digit 0
+  .seconds.division
+    .counter
+      .digits.animate.seconds_tens
+        -i = 0
+        while i <= 5
+          .digit= i++
+        .digit 0
+    .counter
+      .digits.animate.seconds_units
+        -i = 0
+        while i <= 9
+          .digit= i++
+        .digit 0

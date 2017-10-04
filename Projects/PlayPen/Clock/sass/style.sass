@@ -1,0 +1,160 @@
+// ANALOGUE CLOCK //
+
+@keyframes hand
+  25%
+    transform: rotate(90deg)
+  50%
+    transform: rotate(180deg)
+  75%
+    transform: rotate(270deg)
+  to
+    transform: rotate(360deg)
+
+.clockface
+  border: 2px solid black
+  border-radius: 50%
+  height: 20em
+  margin: 0 auto
+  position: relative
+  width: 20em
+  
+  &:after /* Centre dot */
+    background: black
+    border-radius: 50%
+    content: ''
+    height: 1em
+    left: 9.5em
+    position: absolute
+    top: 9.5em
+    width: 1em
+  
+.hand
+  animation: hand infinite steps(15)
+  position: absolute
+  transform-origin: 50% 100%
+  
+.second
+  background: red
+  height: 9em
+  left: calc(50% - 1px)
+  top: 1em
+  width: 2px
+  animation-duration: 60s
+
+.minute
+  background: black
+  border-radius: 3px
+  height: 7.5em
+  left: calc(50% - 3px)
+  top: 2.5em
+  width: 6px
+  animation-duration: 3600s // 60 minutes
+  
+.hour
+  background: black
+  height: 4.5rem
+  left: calc(50% - 5px)
+  top: 5.5rem
+  width: 10px
+  animation-duration: 43200s // 12 hours
+  &:after /* triangle pointer */
+    border: solid transparent
+    border-bottom-color: black
+    border-width: 10px 5px
+    content: ''
+    position: absolute
+    top: -20px
+  
+.label
+  font-size: 2em
+  position: absolute
+  text-align: center
+  transform-origin: 50% 9.5rem
+  top: .5rem
+  width: 100%
+  @for $i from 1 through 11
+    &-#{$i}
+      transform: rotate($i * 30deg)
+      .label_number
+        transform: rotate(-$i * 30deg)
+
+// DIGITAL CLOCK //
+$digitHeight: 1.5
+
+.digital
+  margin: 2em auto
+  text-align: center
+      
+.division
+  display: inline-block
+  font-family: monospace
+  font-size: 3rem
+  font-weight: bold
+  line-height: $digitHeight
+  
+.hours, .minutes
+  &:after
+    content: ':'
+    display: inline-block
+    margin: 0 .45ex 0 -.45ex
+
+.counter
+  display: inline-block
+  height: $digitHeight * 1em
+  margin: 0 -.45ch
+  overflow: hidden
+  vertical-align: bottom
+  width: 1em
+  
+.digit
+  background: linear-gradient(#666, #000)
+  color: white
+  height: $digitHeight * 1em
+  text-align: center
+  width: 100%
+
+$flipDuration: .2 // time taken for flip animation, in seconds
+
+@mixin digitalAnimation($animationName, $unitDuration, $nbSteps)
+  @keyframes #{$animationName}
+    @for $i from 0 to $nbSteps
+      #{$i * 100/$nbSteps}%, #{($i+1) * 100/$nbSteps - $flipDuration * 100/($unitDuration * $nbSteps)}%
+        transform: translateY(#{$i * -$digitHeight}em)
+    99.99999%
+      transform: translateY($digitHeight * $nbSteps * -1em)
+
+  .#{$animationName}
+    animation: $animationName ($unitDuration * $nbSteps * 1s) infinite
+
+@include digitalAnimation(seconds_units, 1, 10)
+@include digitalAnimation(seconds_tens, 10, 6)
+@include digitalAnimation(minutes_units, 60, 10)
+@include digitalAnimation(minutes_tens, 600, 6)
+
+@keyframes hours_units
+  @for $i from 1 through 9
+    #{$i * 100/24}%, #{($i+1) * 100/24 - $flipDuration/864}%,
+    #{($i + 10) * 100/24}%, #{($i + 11) * 100/24 - $flipDuration/864}%
+      transform: translateY(#{$i * $digitHeight * -1em})
+  99.99999%, #{(1000/24 - 0.00001)}%, #{(2000/24 - 0.00001)}%
+    transform: translateY($digitHeight * -10em)
+  @for $i from 1 through 3
+    #{($i+20) * 100/24}%, #{($i+21) * 100/24 - $flipDuration/864}%
+      transform: translateY(#{$i * $digitHeight * -1em})
+  from, to, #{(1000/24)}%, #{(2000/24)}%, #{100/24 - $flipDuration/864}%, #{1100/24 - $flipDuration/864}%, #{2100/24 - $flipDuration/864}%
+    transform: none
+
+@keyframes hours_tens
+  from, to, #{1000/24 - $flipDuration/864}%
+    transform: none
+  #{(1000/24)}%, #{2000/24 - $flipDuration/864}%
+    transform: translateY($digitHeight * -1em)
+  #{(2000/24)}%, #{100 - $flipDuration/864}%
+    transform: translateY($digitHeight * -2em)
+  99.99999%
+    transform: translateY($digitHeight * -3em)
+  
+.hours_units
+  animation: hours_units 86400s infinite
+.hours_tens
+  animation: hours_tens 86400s infinite

@@ -1,0 +1,45 @@
+body,html, #loading {
+	display: block;
+	width: 100vw;
+	height: 100vh;
+	background: #000;
+	color: #fff;
+	padding: 0;
+	margin: 0;
+}
+body main{
+	transition: opacity 2s;
+	opacity: 0;
+}
+body.loaded main{
+	opacity: 1;
+}
+body.loaded #loading{
+	display: none }
+#loading > *{
+	display: block;
+	position: absolute;
+	top: 45vh;
+	left: 0;
+	height: 10vh;
+}
+#loading > *:nth-child(1){
+	background: linear-gradient(to right,
+		orange, red);
+	animation: 
+	loading infinite ease-out 5s,
+	flash infinite ease-out 1s,
+}
+#loading > *:nth-child(2){
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJUlEQVQYV2NkgALB11r/34teYwRxGUEcmARcECaATIOVowOsggCkEggGmziMiAAAAABJRU5ErkJggg==) repeat;
+	width: 100%
+
+}
+@-webkit-keyframes loading{
+	from{ width: 0; }
+	to{ width: 100% }
+}
+@-webkit-keyframes flash{
+	from{ opacity: 1; }
+	50%{ opacity: 0.5; }
+	to{ opacity: 1; } }
